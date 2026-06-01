@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Evaluation Metrics – AI-900 PD</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --paper: #fdfcf8;
+    --paper2: #f7f5ef;
+    --ink: #1a1814;
+    --ink2: #4a4740;
+    --ink3: #8a8580;
+    --rule: #e8e4dc;
+    --accent-blue: #1a5fa8;
+    --accent-blue-light: #e8f0f9;
+    --accent-green: #1a7a4a;
+    --accent-green-light: #e6f5ec;
+    --accent-purple: #5a3fa0;
+    --accent-purple-light: #eeebf8;
+    --accent-red: #c0392b;
+    --accent-red-light: #fdecea;
+    --accent-amber: #b8650a;
+    --accent-amber-light: #fef3e2;
+    --accent-teal: #0e7a6e;
+    --accent-teal-light: #e4f5f3;
+    --border: #d8d4cc;
+    --highlight: #fff8c5;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #e8e4dc;
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: var(--ink);
+  }
+
+  /* PAGE */
+  .page {
+    background: var(--paper);
+    max-width: 860px;
+    margin: 0 auto;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.08);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Red margin line */
+  .page::before {
+    content: '';
+    position: absolute;
+    left: 72px;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: rgba(200,80,80,0.35);
+    z-index: 1;
+  }
+
+  /* Ruled lines background */
+  .page-body {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 31px,
+      var(--rule) 31px,
+      var(--rule) 32px
+    );
+    background-attachment: local;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 28px 48px 20px 88px;
+    border-bottom: 2px solid var(--border);
+    background: var(--paper);
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-meta {
+    font-size: 11px;
+    color: var(--ink3);
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .page-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.03em;
+  }
+  .tag-b { background: var(--accent-blue-light); color: var(--accent-blue); }
+  .tag-g { background: var(--accent-green-light); color: var(--accent-green); }
+  .tag-p { background: var(--accent-purple-light); color: var(--accent-purple); }
+
+  /* CONTENT */
+  .page-content {
+    padding: 24px 48px 48px 88px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* SECTION HEADERS */
+  .section-heading {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin: 36px 0 16px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--accent-blue);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-heading .num {
+    background: var(--accent-blue);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .section-heading.green { color: var(--accent-green); border-color: var(--accent-green); }
+  .section-heading.green .num { background: var(--accent-green); }
+  .section-heading.purple { color: var(--accent-purple); border-color: var(--accent-purple); }
+  .section-heading.purple .num { background: var(--accent-purple); }
+
+  /* INTRO TEXT */
+  .intro-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--ink2);
+    margin-bottom: 20px;
+  }
+
+  /* METRIC ENTRIES */
+  .metric-entry {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border-left: 3px solid var(--border);
+    background: rgba(255,255,255,0.6);
+    position: relative;
+  }
+
+  .metric-entry:hover { border-left-color: var(--accent-blue); }
+
+  .metric-number {
+    position: absolute;
+    left: -38px;
+    top: 14px;
+    width: 22px;
+    height: 22px;
+    background: var(--ink);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .metric-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .metric-tagline {
+    font-size: 12px;
+    color: var(--ink3);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .metric-desc {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink2);
+    margin-bottom: 10px;
+  }
+
+  .formula-block {
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .metric-note {
+    font-size: 12.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+    padding: 6px 10px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+
+  .note-warn { background: var(--accent-amber-light); border-left: 3px solid var(--accent-amber); color: var(--accent-amber); }
+  .note-info { background: var(--accent-blue-light); border-left: 3px solid var(--accent-blue); color: var(--accent-blue); }
+  .note-tip { background: var(--accent-green-light); border-left: 3px solid var(--accent-green); color: var(--accent-green); }
+  .note-text { color: var(--ink2); }
+
+  /* TWO COLUMN */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--highlight);
+    border: 1px solid #e0d060;
+    border-radius: 3px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  /* CONFUSION MATRIX */
+  .confusion-wrap {
+    margin: 16px 0;
+  }
+
+  .confusion-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  table.cm {
+    border-collapse: collapse;
+    font-size: 13px;
+    width: auto;
+  }
+
+  table.cm th, table.cm td {
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    text-align: center;
+  }
+
+  table.cm th {
+    background: var(--paper2);
+    font-weight: 600;
+    color: var(--ink2);
+    font-size: 12px;
+  }
+
+  table.cm td.tp { background: var(--accent-green-light); color: var(--accent-green); font-weight: 600; }
+  table.cm td.tn { background: var(--accent-green-light); color: var(--accent-green); font-weight: 600; }
+  table.cm td.fp { background: var(--accent-red-light); color: var(--accent-red); font-weight: 600; }
+  table.cm td.fn { background: var(--accent-red-light); color: var(--accent-red); font-weight: 600; }
+
+  .cm-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cm-legend-item {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .cm-dot {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+
+  /* ROC SCALE */
+  .roc-scale {
+    display: flex;
+    gap: 0;
+    margin: 12px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .roc-item {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .roc-val { font-weight: 600; font-size: 15px; display: block; }
+  .roc-lbl { font-size: 11px; color: var(--ink3); }
+  .roc-bad  { background: var(--accent-red-light); color: var(--accent-red); }
+  .roc-mid  { background: var(--paper2); color: var(--ink2); }
+  .roc-good { background: #e8f4ec; color: var(--accent-green); }
+  .roc-best { background: var(--accent-green-light); color: var(--accent-green); }
+
+  /* WHEN TO USE TABLE */
+  table.when {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+
+  table.when th {
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--ink2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  table.when td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    vertical-align: top;
+    line-height: 1.6;
+    color: var(--ink2);
+  }
+
+  table.when tr:nth-child(even) td { background: rgba(250,249,245,0.6); }
+
+  /* PAGE FOOTER */
+  .page-footer {
+    border-top: 1px solid var(--border);
+    padding: 14px 48px 14px 88px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--ink3);
+    background: var(--paper2);
+  }
+
+  /* SIDE ANNOTATIONS */
+  .annotation {
+    position: absolute;
+    left: 8px;
+    font-size: 10.5px;
+    color: rgba(200,80,80,0.6);
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    line-height: 1.4;
+    width: 55px;
+    text-align: right;
+  }
+
+  /* LIST STYLES */
+  ul.nb {
+    margin: 6px 0 10px 18px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--ink2);
+  }
+
+  ul.nb li { margin-bottom: 2px; }
+
+  /* DIVIDER */
+  hr.soft {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 24px 0;
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(26,95,168,0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .print-btn:hover { background: #154d8a; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; max-width: 100%; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d3d6b;padding:10px 24px;display:flex;align-items:center;gap:14px;font-family:'DM Sans',sans-serif;position:sticky;top:0;z-index:9999;">
+  <a href="index.html" style="color:#93c5fd;text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">← Back to AI-901 PD Portal</a>
+  <span style="color:rgba(255,255,255,.3);font-size:13px">|</span>
+  <span style="color:rgba(255,255,255,.45);font-size:12px">Virtual Azure AI-901 PD</span>
+</div>
+
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="page-meta">Virtual Azure AI-900 PD Notebook &nbsp;·&nbsp; FL Session 1 &nbsp;·&nbsp; ML Evaluation Metrics</p>
+    <h1 class="page-title">Evaluation Metrics in Machine Learning</h1>
+    <p class="page-subtitle">A complete reference to the metrics used to measure model performance — across classification, regression, and clustering tasks.</p>
+    <div class="tag-row">
+      <span class="tag tag-b">Classification</span>
+      <span class="tag tag-g">Regression</span>
+      <span class="tag tag-p">Clustering</span>
+    </div>
+  </div>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+  <div class="page-content">
+
+    <!-- INTRO -->
+    <p class="intro-text" style="margin-top:8px;">
+      When building machine learning models, we need to know how well they perform.
+      Evaluation metrics let us measure effectiveness and choose the best model for our goals.
+      Selecting the <em>right</em> metric is just as important as selecting the right algorithm.
+    </p>
+
+    <!-- ===================== SECTION 1: CLASSIFICATION ===================== -->
+    <h2 class="section-heading">
+      <span class="num">SECTION 1</span> Classification Metrics
+    </h2>
+
+    <p style="font-size:13px; color:var(--ink3); margin-bottom:18px; font-style:italic;">
+      Classification = predicting a discrete category (Yes/No, Spam/Not Spam, Disease/Healthy).
+    </p>
+
+    <!-- ACCURACY -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">use with<br>balanced<br>data</span>
+      <span class="metric-number">1</span>
+      <p class="metric-name">Accuracy</p>
+      <p class="metric-tagline">Proportion of all predictions that were correct</p>
+      <p class="metric-desc">
+        The most basic metric. It tells us what percentage of all predictions the model got right.
+        Simple and intuitive, but can be deceptive with imbalanced datasets.
+      </p>
+      <div class="formula-block">Accuracy = Number of Correct Predictions / Total Predictions</div>
+      <div class="metric-note note-warn">
+        ⚠ Warning: In a dataset with 90% Class A and 10% Class B, a model always predicting A scores 90% accuracy — but never detects Class B at all.
+      </div>
+    </div>
+
+    <!-- PRECISION -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">avoid<br>false<br>alarms</span>
+      <span class="metric-number">2</span>
+      <p class="metric-name">Precision</p>
+      <p class="metric-tagline">Of all "positive" predictions, how many were actually positive?</p>
+      <p class="metric-desc">
+        Precision focuses on the quality of positive predictions. Use when false positives are costly —
+        like diagnosing a healthy person as sick, or blocking a legitimate email.
+      </p>
+      <div class="formula-block">Precision = TP / (TP + FP)</div>
+      <div class="metric-note note-info">
+        TP = True Positives &nbsp;|&nbsp; FP = False Positives (predicted positive, actually negative)
+      </div>
+    </div>
+
+    <!-- RECALL -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">catch<br>every<br>case</span>
+      <span class="metric-number">3</span>
+      <p class="metric-name">Recall (Sensitivity)</p>
+      <p class="metric-tagline">Of all actual positives, how many did we correctly find?</p>
+      <p class="metric-desc">
+        Recall measures coverage. Use when missing a positive case is costly — like missing a cancer
+        diagnosis or a security threat. High recall = fewer cases slipping through.
+      </p>
+      <div class="formula-block">Recall = TP / (TP + FN)</div>
+      <div class="metric-note note-info">
+        FN = False Negatives (predicted negative, but actually positive)
+      </div>
+    </div>
+
+    <!-- F1 -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">best of<br>both</span>
+      <span class="metric-number">4</span>
+      <p class="metric-name">F1 Score</p>
+      <p class="metric-tagline">Harmonic mean of Precision and Recall — the balanced metric</p>
+      <p class="metric-desc">
+        When you need both precision AND recall to be high, use F1. It combines them into a single
+        number. Range: 0 (worst) to 1 (best). Especially useful with imbalanced classes.
+      </p>
+      <div class="formula-block">F1 = 2 × (Precision × Recall) / (Precision + Recall)</div>
+      <div class="metric-note note-tip">
+        ✓ Tip: F1 is the go-to metric when your dataset has class imbalance (one class is much rarer than the other).
+      </div>
+    </div>
+
+    <!-- LOG LOSS -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="metric-number">5</span>
+      <p class="metric-name">Logarithmic Loss (Log Loss)</p>
+      <p class="metric-tagline">Measures how confident and correct the model's probability outputs are</p>
+      <p class="metric-desc">
+        Log Loss penalizes the model for being confidently wrong. A model that says "99% sure this is positive"
+        when it's actually negative gets a very high penalty. Lower Log Loss = better.
+      </p>
+      <div class="formula-block">Log Loss = −(1/N) × Σᵢ Σⱼ yᵢⱼ · log(pᵢⱼ)</div>
+      <div class="metric-note note-info">
+        yᵢⱼ = actual class (0 or 1) &nbsp;|&nbsp; pᵢⱼ = predicted probability &nbsp;|&nbsp; Goal: <strong>minimize</strong> Log Loss
+      </div>
+    </div>
+
+    <!-- AUC / ROC -->
+    <div class="metric-entry" style="position:relative;">
+      <span class="metric-number">6</span>
+      <p class="metric-name">AUC / ROC Curve</p>
+      <p class="metric-tagline">Overall ability to distinguish between positive and negative classes</p>
+      <p class="metric-desc">
+        The ROC curve plots True Positive Rate vs False Positive Rate at every possible threshold.
+        AUC (Area Under the Curve) gives a single number: probability that the model ranks a
+        random positive example higher than a random negative one.
+      </p>
+
+      <div class="two-col" style="margin-top:10px; margin-bottom:10px;">
+        <div>
+          <div class="formula-block" style="margin-bottom:6px;">TPR = TP / (TP + FN)</div>
+          <div style="font-size:12px; color:var(--ink3);">True Positive Rate (Sensitivity / Recall)</div>
+        </div>
+        <div>
+          <div class="formula-block" style="margin-bottom:6px;">FPR = FP / (FP + TN)</div>
+          <div style="font-size:12px; color:var(--ink3);">False Positive Rate (1 − Specificity)</div>
+        </div>
+      </div>
+
+      <p style="font-size:12px; font-weight:600; color:var(--ink3); text-transform:uppercase; letter-spacing:0.04em; margin:10px 0 6px;">AUC interpretation scale</p>
+      <div class="roc-scale">
+        <div class="roc-item roc-bad"><span class="roc-val">&lt; 0.5</span><span class="roc-lbl">Worse than random</span></div>
+        <div class="roc-item roc-mid"><span class="roc-val">0.5</span><span class="roc-lbl">Random guessing</span></div>
+        <div class="roc-item roc-good"><span class="roc-val">0.7–0.9</span><span class="roc-lbl">Good model</span></div>
+        <div class="roc-item roc-best"><span class="roc-val">1.0</span><span class="roc-lbl">Perfect model</span></div>
+      </div>
+    </div>
+
+    <!-- CONFUSION MATRIX -->
+    <div class="highlight-box">
+      <strong>Confusion Matrix</strong> — Binary classification results at a glance (N=165 samples)
+    </div>
+
+    <div class="confusion-wrap">
+      <p class="confusion-label">Actual vs. Predicted</p>
+      <table class="cm">
+        <thead>
+          <tr>
+            <th style="background:transparent; border:none;"></th>
+            <th>Predicted: NO</th>
+            <th>Predicted: YES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="text-align:left; font-size:12px; color:var(--ink2); background:var(--paper2);">Actual: NO</th>
+            <td class="tn">TN = 50<br><span style="font-size:11px; font-weight:400;">Correct ✓</span></td>
+            <td class="fp">FP = 10<br><span style="font-size:11px; font-weight:400;">False alarm ✗</span></td>
+          </tr>
+          <tr>
+            <th style="text-align:left; font-size:12px; color:var(--ink2); background:var(--paper2);">Actual: YES</th>
+            <td class="fn">FN = 5<br><span style="font-size:11px; font-weight:400;">Missed ✗</span></td>
+            <td class="tp">TP = 100<br><span style="font-size:11px; font-weight:400;">Correct ✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="cm-legend">
+        <div class="cm-legend-item"><div class="cm-dot" style="background:var(--accent-green-light); border:1px solid var(--accent-green);"></div> TP / TN = Correct predictions</div>
+        <div class="cm-legend-item"><div class="cm-dot" style="background:var(--accent-red-light); border:1px solid var(--accent-red);"></div> FP / FN = Errors</div>
+        <div class="cm-legend-item" style="color:var(--ink3);">Accuracy = (100+50)/165 = 90.9%</div>
+      </div>
+    </div>
+
+    <hr class="soft">
+
+    <!-- ===================== SECTION 2: REGRESSION ===================== -->
+    <h2 class="section-heading green">
+      <span class="num">SECTION 2</span> Regression Metrics
+    </h2>
+
+    <p style="font-size:13px; color:var(--ink3); margin-bottom:18px; font-style:italic;">
+      Regression = predicting a continuous numeric value (price, temperature, sales volume).
+    </p>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">simple &amp;<br>robust</span>
+      <span class="metric-number" style="background:var(--accent-green);">1</span>
+      <p class="metric-name">Mean Absolute Error (MAE)</p>
+      <p class="metric-tagline">Average of the absolute differences between predicted and actual values</p>
+      <p class="metric-desc">Easy to interpret — in the same units as the target variable. Treats all errors equally. Less sensitive to outliers than MSE.</p>
+      <div class="formula-block">MAE = (1/N) × Σ |yⱼ − ŷⱼ|</div>
+    </div>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">punishes<br>big<br>errors</span>
+      <span class="metric-number" style="background:var(--accent-green);">2</span>
+      <p class="metric-name">Mean Squared Error (MSE)</p>
+      <p class="metric-tagline">Average of squared differences — penalizes large errors more</p>
+      <p class="metric-desc">Squaring amplifies large errors. Useful when big mistakes are especially costly. Output is in squared units (harder to interpret directly).</p>
+      <div class="formula-block">MSE = (1/N) × Σ (yⱼ − ŷⱼ)²</div>
+    </div>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="metric-number" style="background:var(--accent-green);">3</span>
+      <p class="metric-name">Root Mean Squared Error (RMSE)</p>
+      <p class="metric-tagline">Square root of MSE — back in the original units</p>
+      <p class="metric-desc">Like MSE but interpretable. Best of both worlds: penalizes large errors, yet expressed in the target's original units (dollars, degrees, etc.).</p>
+      <div class="formula-block">RMSE = √[ (1/N) × Σ (yⱼ − ŷⱼ)² ]</div>
+    </div>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">wide-<br>range<br>values</span>
+      <span class="metric-number" style="background:var(--accent-green);">4</span>
+      <p class="metric-name">Root Mean Squared Log Error (RMSLE)</p>
+      <p class="metric-tagline">For targets that span many orders of magnitude</p>
+      <p class="metric-desc">Applied to log-transformed values. Penalizes underestimations more than overestimations. Ideal for predicting prices, populations, or any wide-range quantity.</p>
+      <div class="formula-block">RMSLE = √[ (1/N) × Σ (log(yⱼ+1) − log(ŷⱼ+1))² ]</div>
+    </div>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="annotation" style="top:14px;">goodness<br>of fit</span>
+      <span class="metric-number" style="background:var(--accent-green);">5</span>
+      <p class="metric-name">R² (R-Squared)</p>
+      <p class="metric-tagline">Proportion of variance in the target explained by the model</p>
+      <p class="metric-desc">Tells us how much better the model is vs. simply predicting the mean every time. R²=1 is perfect; R²=0 means the model explains nothing.</p>
+      <div class="formula-block">R² = 1 − [ Σ(yⱼ − ŷⱼ)² / Σ(yⱼ − ȳ)² ]</div>
+      <div class="metric-note note-tip">✓ R² close to 1 → good model. Close to 0 → poor fit. Can go negative if the model is worse than just predicting the mean.</div>
+    </div>
+
+    <hr class="soft">
+
+    <!-- ===================== SECTION 3: CLUSTERING ===================== -->
+    <h2 class="section-heading purple">
+      <span class="num">SECTION 3</span> Clustering Metrics
+    </h2>
+
+    <p style="font-size:13px; color:var(--ink3); margin-bottom:18px; font-style:italic;">
+      Clustering = unsupervised grouping of similar data points. No ground-truth labels exist.
+    </p>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="metric-number" style="background:var(--accent-purple);">1</span>
+      <p class="metric-name">Silhouette Score</p>
+      <p class="metric-tagline">How well does each point fit its cluster vs. the nearest neighbor cluster?</p>
+      <p class="metric-desc">Measures cohesion (closeness within cluster) and separation (distance to other clusters). Range: −1 to +1.</p>
+      <div class="formula-block">Silhouette = (b − a) / max(a, b)
+a = avg distance to same-cluster points
+b = avg distance to nearest other cluster</div>
+      <div class="two-col" style="margin-top:10px;">
+        <div class="metric-note note-tip">Score ≈ +1 → well clustered, point is in the right group</div>
+        <div class="metric-note note-warn">Score ≈ −1 → point likely in the wrong cluster</div>
+      </div>
+    </div>
+
+    <div class="metric-entry" style="position:relative;">
+      <span class="metric-number" style="background:var(--accent-purple);">2</span>
+      <p class="metric-name">Davies-Bouldin Index</p>
+      <p class="metric-tagline">Average similarity between each cluster and its most similar neighbor</p>
+      <p class="metric-desc">Measures how separated and compact the clusters are. Unlike Silhouette, <strong>lower is better</strong>. Goal: minimize this index.</p>
+      <div class="formula-block">DB = (1/N) × Σ max_{i≠j} [ (σᵢ + σⱼ) / d(cᵢ, cⱼ) ]
+σᵢ = avg distance of points in cluster i from centroid
+d(cᵢ, cⱼ) = distance between cluster centroids i and j</div>
+      <div class="metric-note note-tip">✓ Lower DB index = clusters are more compact and better separated.</div>
+    </div>
+
+    <hr class="soft">
+
+    <!-- WHEN TO USE TABLE -->
+    <h2 class="section-heading" style="color:var(--ink); border-color:var(--border);">
+      <span class="num" style="background:var(--ink);">QUICK REF</span> When to Use Which Metric
+    </h2>
+
+    <table class="when">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Type</th>
+          <th>Use when…</th>
+          <th>Avoid when…</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Accuracy</strong></td>
+          <td>Classification</td>
+          <td>Classes are balanced</td>
+          <td>Dataset is imbalanced</td>
+        </tr>
+        <tr>
+          <td><strong>Precision</strong></td>
+          <td>Classification</td>
+          <td>False alarms are costly (spam filter)</td>
+          <td>Missing cases is the bigger concern</td>
+        </tr>
+        <tr>
+          <td><strong>Recall</strong></td>
+          <td>Classification</td>
+          <td>Missing positives is costly (cancer detection)</td>
+          <td>False alarms are very costly</td>
+        </tr>
+        <tr>
+          <td><strong>F1 Score</strong></td>
+          <td>Classification</td>
+          <td>Need balance of precision & recall; imbalanced data</td>
+          <td>One metric clearly matters more</td>
+        </tr>
+        <tr>
+          <td><strong>AUC/ROC</strong></td>
+          <td>Classification</td>
+          <td>Evaluating across all thresholds; binary tasks</td>
+          <td>Multi-class tasks (use macro-F1)</td>
+        </tr>
+        <tr>
+          <td><strong>MAE</strong></td>
+          <td>Regression</td>
+          <td>Want interpretable errors; outliers present</td>
+          <td>Large errors must be penalized heavily</td>
+        </tr>
+        <tr>
+          <td><strong>RMSE</strong></td>
+          <td>Regression</td>
+          <td>Large errors are unacceptable; interpretable units needed</td>
+          <td>Many outliers skewing results</td>
+        </tr>
+        <tr>
+          <td><strong>R²</strong></td>
+          <td>Regression</td>
+          <td>Comparing models; assessing variance explained</td>
+          <td>Absolute error size matters most</td>
+        </tr>
+        <tr>
+          <td><strong>Silhouette</strong></td>
+          <td>Clustering</td>
+          <td>Choosing number of clusters (k)</td>
+          <td>Very large datasets (computationally expensive)</td>
+        </tr>
+        <tr>
+          <td><strong>Davies-Bouldin</strong></td>
+          <td>Clustering</td>
+          <td>Comparing clustering algorithms</td>
+          <td>Non-convex cluster shapes</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div><!-- end page-content -->
+  </div><!-- end page-body -->
+
+  <!-- PAGE FOOTER -->
+  <div class="page-footer">
+    <span>Virtual Azure AI-900 PD &nbsp;·&nbsp; FL Session 1 — AI Models &amp; ML Evaluation Metrics</span>
+    <span>Friday, February 21, 2025</span>
+  </div>
+
+</div><!-- end page -->
+
+<button class="print-btn" onclick="window.print()">
+  🖨 Print / Save as PDF
+</button>
+
+</body>
+</html>

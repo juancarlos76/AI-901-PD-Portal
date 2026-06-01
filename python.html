@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python for AI — AI-901 PD Notebook Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --paper: #fdfcf8;
+    --paper2: #f7f5ef;
+    --ink: #1a1814;
+    --ink2: #4a4740;
+    --ink3: #8a8580;
+    --rule: #e8e4dc;
+    --border: #d8d4cc;
+    --blue: #1a5fa8;
+    --blue-l: #e8f0f9;
+    --green: #1a7a4a;
+    --green-l: #e6f5ec;
+    --amber: #8b5e00;
+    --amber-l: #fef3e2;
+    --purple: #5a3fa0;
+    --purple-l: #eeebf8;
+    --teal: #0e6b60;
+    --teal-l: #e0f4f1;
+    --red: #a32d2d;
+    --red-l: #fdecea;
+    --highlight: #fff8c5;
+    --code-bg: #1e1e1e;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #e2ded6;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    color: var(--ink);
+  }
+
+  /* ── PAGE ── */
+  .page {
+    background: var(--paper);
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ruled lines */
+  .page-body {
+    background-image: repeating-linear-gradient(
+      to bottom, transparent, transparent 31px,
+      var(--rule) 31px, var(--rule) 32px
+    );
+  }
+
+  /* Red margin */
+  .page::before {
+    content: '';
+    position: absolute;
+    left: 76px; top: 0; bottom: 0;
+    width: 1.5px;
+    background: rgba(200,80,80,0.3);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    padding: 28px 52px 20px 96px;
+    border-bottom: 2px solid var(--border);
+    background: var(--paper);
+    position: relative; z-index: 2;
+  }
+  .page-meta { font-size: 11px; color: var(--ink3); letter-spacing:.05em; text-transform:uppercase; margin-bottom:5px; }
+  .page-title { font-family: 'Source Serif 4', serif; font-size: 34px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .page-subtitle { font-size: 14px; color: var(--ink2); line-height: 1.65; max-width: 640px; }
+  .tag-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 3px; letter-spacing:.03em; }
+  .tag-blue   { background: var(--blue-l);   color: var(--blue); }
+  .tag-green  { background: var(--green-l);  color: var(--green); }
+  .tag-purple { background: var(--purple-l); color: var(--purple); }
+  .tag-amber  { background: var(--amber-l);  color: var(--amber); }
+
+  /* ── CONTENT ── */
+  .page-content { padding: 24px 52px 52px 96px; position: relative; z-index: 2; }
+
+  /* Section heading */
+  .sec-head {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink3);
+    margin: 32px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-num {
+    background: var(--blue); color: white;
+    font-size: 10px; padding: 2px 7px; border-radius: 2px;
+  }
+
+  /* Prose */
+  .prose {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14.5px; line-height: 2;
+    color: var(--ink2); margin-bottom: 14px;
+  }
+
+  /* Card grid */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 14px 0; }
+  .card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 6px; padding: 14px 16px;
+  }
+  .card-icon { font-size: 22px; margin-bottom: 6px; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .card-desc { font-size: 12.5px; color: var(--ink2); line-height: 1.55; }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .two-col-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 6px; padding: 16px 18px;
+  }
+  .two-col-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+
+  /* Callout */
+  .callout {
+    border-radius: 0 5px 5px 0; padding: 12px 16px;
+    margin: 14px 0; font-size: 13.5px; line-height: 1.7;
+  }
+  .callout strong { font-weight: 600; }
+  .callout-blue   { background: var(--blue-l);   border-left: 4px solid var(--blue);   color: #0d3e70; }
+  .callout-green  { background: var(--green-l);  border-left: 4px solid var(--green);  color: #0d4a2a; }
+  .callout-amber  { background: var(--amber-l);  border-left: 4px solid var(--amber);  color: #5a3c00; }
+  .callout-purple { background: var(--purple-l); border-left: 4px solid var(--purple); color: #3a2472; }
+
+  /* Code block */
+  .code-wrap { margin: 12px 0; }
+  .code-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .code-block {
+    background: var(--code-bg); border-radius: 5px;
+    padding: 14px 18px; overflow-x: auto;
+    border-left: 3px solid var(--blue);
+  }
+  .code-block pre { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.75; color: #d4d4d4; }
+  .kw  { color: #569cd6; }
+  .fn  { color: #dcdcaa; }
+  .st  { color: #ce9178; }
+  .cm  { color: #6a9955; font-style: italic; }
+  .nb  { color: #9cdcfe; }
+  .num { color: #b5cea8; }
+  .cls { color: #4ec9b0; }
+  .pn  { color: #ffd700; }
+
+  .output-block {
+    background: #0d1117; border-radius: 5px;
+    padding: 10px 18px; margin: 4px 0 12px;
+    border-left: 3px solid #3fb950;
+  }
+  .output-block .out-label { font-size: 10px; color: #3fb950; font-weight: 600; letter-spacing:.05em; margin-bottom:4px; }
+  .output-block pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8b949e; line-height: 1.7; }
+
+  /* Library table */
+  .lib-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  .lib-table th {
+    background: var(--blue); color: white; font-weight: 600;
+    padding: 8px 12px; text-align: left; font-size: 12px;
+    letter-spacing: .03em;
+  }
+  .lib-table td { border: 1px solid var(--border); padding: 9px 12px; vertical-align: top; line-height: 1.55; }
+  .lib-table tr:nth-child(even) td { background: var(--paper2); }
+  .lib-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 2px 8px; border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* Comparison table */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  .cmp-table th { background: var(--teal); color: white; font-weight: 600; padding: 8px 12px; text-align: left; font-size: 12px; }
+  .cmp-table td { border: 1px solid var(--border); padding: 8px 12px; line-height: 1.5; vertical-align: top; }
+  .cmp-table tr:nth-child(even) td { background: var(--paper2); }
+
+  /* Steps */
+  .steps { counter-reset: steps; margin: 12px 0; }
+  .step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+  .step-num {
+    counter-increment: steps;
+    min-width: 24px; height: 24px;
+    background: var(--ink); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; margin-top: 1px; flex-shrink: 0;
+  }
+  .step-body { font-size: 13.5px; color: var(--ink2); line-height: 1.65; }
+  .step-body strong { color: var(--ink); font-weight: 600; }
+
+  /* Annotation */
+  .annotation {
+    position: absolute; left: 6px;
+    font-size: 10px; color: rgba(180,60,60,.55);
+    font-family: 'Source Serif 4', serif;
+    font-style: italic; line-height: 1.3;
+    width: 62px; text-align: right;
+    writing-mode: horizontal-tb;
+  }
+
+  /* Highlight */
+  mark { background: var(--highlight); padding: 0 2px; border-radius: 2px; }
+
+  /* Divider */
+  hr.soft { border: none; border-top: 1px dashed var(--border); margin: 24px 0; }
+
+  /* Footer */
+  .page-footer {
+    border-top: 1px solid var(--border);
+    padding: 12px 52px 12px 96px;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink3);
+    background: var(--paper2);
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--blue); color: white;
+    border: none; padding: 9px 20px; border-radius: 4px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; box-shadow: 0 2px 12px rgba(26,95,168,.3);
+  }
+  .print-btn:hover { background: #154d8a; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; max-width: 100%; }
+    .print-btn { display: none; }
+  }
+
+  ul.nb { margin: 6px 0 10px 20px; }
+  ul.nb li { font-size: 13.5px; color: var(--ink2); line-height: 1.9; font-family: 'Source Serif 4', serif; }
+
+  .inline-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; background: var(--paper2);
+    border: 1px solid var(--border); padding: 1px 6px; border-radius: 3px;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+<div style="background:#0d3d6b;padding:10px 24px;display:flex;align-items:center;gap:14px;font-family:'DM Sans',sans-serif;position:sticky;top:0;z-index:9999;">
+  <a href="index.html" style="color:#93c5fd;text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">← Back to AI-901 PD Portal</a>
+  <span style="color:rgba(255,255,255,.3);font-size:13px">|</span>
+  <span style="color:rgba(255,255,255,.45);font-size:12px">Virtual Azure AI-901 PD</span>
+</div>
+
+
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <div class="page-header">
+    <p class="page-meta">Virtual Azure AI-901 PD Notebook &nbsp;·&nbsp; NLP Module &nbsp;·&nbsp; Prerequisite — Python for AI</p>
+    <h1 class="page-title">Python for AI Development</h1>
+    <p class="page-subtitle">A concise introduction to Python syntax, libraries, and practical examples — everything you need to run the Azure AI lab scripts confidently.</p>
+    <div class="tag-row">
+      <span class="tag tag-blue">Python 3</span>
+      <span class="tag tag-green">Azure AI SDKs</span>
+      <span class="tag tag-purple">NLP</span>
+      <span class="tag tag-amber">Prerequisite</span>
+    </div>
+  </div>
+
+  <!-- ── BODY ── -->
+  <div class="page-body">
+  <div class="page-content">
+
+    <!-- ══════════ SECTION 1: WHAT IS PYTHON ══════════ -->
+    <div class="sec-head"><span class="sec-num">01</span> What is Python?</div>
+
+    <p class="prose">Python is a high-level, general-purpose programming language created by Guido van Rossum in 1991. It has become the <mark>dominant language for AI, machine learning, and data science</mark> because of its readable syntax and massive ecosystem of scientific libraries. Every Azure AI SDK — including the ones used in these labs — has a Python client.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">👁</div>
+        <div class="card-title">Readable syntax</div>
+        <div class="card-desc">Code reads almost like English. You focus on solving the problem, not fighting the language.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <div class="card-title">Rich libraries</div>
+        <div class="card-desc">NumPy, pandas, scikit-learn, TensorFlow — all built for Python and used by AI researchers worldwide.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <div class="card-title">Huge community</div>
+        <div class="card-desc">Millions of developers. Every Azure AI SDK — Translator, Face, OpenAI — has a Python client.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">☁️</div>
+        <div class="card-title">Runs anywhere</div>
+        <div class="card-desc">Local machine, Azure Cloud Shell, VS Code for the Web, Jupyter notebooks — Python works in all of them.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-blue">
+      <strong>Key pattern in all lab scripts:</strong> import a library → set your credentials → call an API → print or process the result. You will see this four-step pattern in every Python client script in these labs.
+    </div>
+
+    <!-- ══════════ SECTION 2: SYNTAX BASICS ══════════ -->
+    <div class="sec-head"><span class="sec-num">02</span> Python Syntax Basics</div>
+
+    <!-- Variables -->
+    <p style="font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 6px;">Variables &amp; data types</p>
+    <p class="prose" style="margin-bottom:8px;">Python determines the data type automatically — no need to declare it.</p>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="cm"># Python figures out the type automatically</span>
+<span class="nb">name</span>       = <span class="st">"Ada Lovelace"</span>   <span class="cm"># str   — text</span>
+<span class="nb">age</span>        = <span class="num">36</span>               <span class="cm"># int   — whole number</span>
+<span class="nb">confidence</span> = <span class="num">0.97</span>             <span class="cm"># float — decimal</span>
+<span class="nb">is_active</span>  = <span class="kw">True</span>             <span class="cm"># bool  — True or False</span>
+
+<span class="cm"># f-strings — embed variables directly inside a string</span>
+<span class="fn">print</span>(<span class="st">f"Hello, </span><span class="pn">{name}</span><span class="st">! Confidence: </span><span class="pn">{confidence}</span><span class="st">"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>Hello, Ada Lovelace! Confidence: 0.97</pre></div>
+    </div>
+
+    <!-- Lists -->
+    <p style="font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 6px;">Lists — ordered collections</p>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="nb">languages</span> = [<span class="st">"Spanish"</span>, <span class="st">"French"</span>, <span class="st">"Arabic"</span>, <span class="st">"Japanese"</span>]
+
+<span class="fn">print</span>(<span class="nb">languages</span>[<span class="num">0</span>])              <span class="cm"># Spanish  ← index starts at 0</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="nb">languages</span>))            <span class="cm"># 4</span>
+
+<span class="kw">for</span> <span class="nb">lang</span> <span class="kw">in</span> <span class="nb">languages</span>:           <span class="cm"># loop through every item</span>
+    <span class="fn">print</span>(<span class="st">f"Translating to </span><span class="pn">{lang}</span><span class="st">"</span>)</pre></div>
+    </div>
+
+    <!-- Dictionaries -->
+    <p style="font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 6px;">Dictionaries — key-value pairs</p>
+    <div class="callout callout-amber"><strong>Why dictionaries matter:</strong> The JSON responses from every Azure AI API come back as Python dictionaries. Learning to navigate them is the single most important skill for these labs.</div>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="cm"># A dictionary maps keys to values — exactly like a JSON object</span>
+<span class="nb">face_result</span> = {
+    <span class="st">"faceId"</span>: <span class="st">"c5c24a82-6845"</span>,
+    <span class="st">"blurLevel"</span>: <span class="st">"Low"</span>,
+    <span class="st">"confidence"</span>: <span class="num">0.99</span>
+}
+
+<span class="fn">print</span>(<span class="nb">face_result</span>[<span class="st">"blurLevel"</span>])     <span class="cm"># Low</span>
+<span class="fn">print</span>(<span class="nb">face_result</span>[<span class="st">"confidence"</span>])    <span class="cm"># 0.99</span>
+
+<span class="kw">for</span> <span class="nb">key</span>, <span class="nb">value</span> <span class="kw">in</span> <span class="nb">face_result</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="st">f"</span><span class="pn">{key}</span><span class="st">: </span><span class="pn">{value}</span><span class="st">"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>Low
+0.99
+faceId: c5c24a82-6845
+blurLevel: Low
+confidence: 0.99</pre></div>
+    </div>
+
+    <!-- Functions + Conditions -->
+    <div class="two-col" style="margin-top:16px;">
+      <div class="two-col-card">
+        <div class="two-col-title" style="color:var(--blue);">Functions — def keyword</div>
+        <div class="code-block"><pre><span class="kw">def</span> <span class="fn">check_quality</span>(<span class="nb">q</span>):
+    <span class="kw">if</span> <span class="nb">q</span> == <span class="st">"High"</span>:
+        <span class="kw">return</span> <span class="st">"✓ Proceed"</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="st">"✗ Retry"</span>
+
+<span class="fn">print</span>(<span class="fn">check_quality</span>(<span class="st">"High"</span>))
+<span class="cm"># ✓ Proceed</span></pre></div>
+      </div>
+      <div class="two-col-card">
+        <div class="two-col-title" style="color:var(--green);">If / elif / else</div>
+        <div class="code-block"><pre><span class="nb">quality</span> = <span class="st">"Medium"</span>
+
+<span class="kw">if</span> <span class="nb">quality</span> == <span class="st">"High"</span>:
+    <span class="fn">print</span>(<span class="st">"Proceed"</span>)
+<span class="kw">elif</span> <span class="nb">quality</span> == <span class="st">"Medium"</span>:
+    <span class="fn">print</span>(<span class="st">"Reposition"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Retry"</span>)
+<span class="cm"># Reposition</span></pre></div>
+      </div>
+    </div>
+
+    <!-- Importing -->
+    <p style="font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 6px;">Importing libraries</p>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="kw">import</span> <span class="cls">json</span>                        <span class="cm"># import an entire library</span>
+<span class="kw">from</span> <span class="cls">datetime</span> <span class="kw">import</span> <span class="fn">datetime</span>       <span class="cm"># import one specific function</span>
+<span class="kw">import</span> <span class="cls">requests</span> <span class="kw">as</span> <span class="nb">req</span>             <span class="cm"># import with a shorter alias</span>
+
+<span class="cm"># Install a library before importing it:</span>
+<span class="cm">#   pip install requests</span></pre></div>
+    </div>
+
+    <hr class="soft">
+
+    <!-- ══════════ SECTION 3: LIBRARIES ══════════ -->
+    <div class="sec-head"><span class="sec-num">03</span> Python Libraries for AI</div>
+
+    <p class="prose">A library is a collection of pre-written code you import and reuse. In AI, libraries save you from writing thousands of lines of math and networking code from scratch.</p>
+
+    <p style="font-size:13px;font-weight:600;color:var(--blue);margin:14px 0 8px;">Azure AI SDK libraries — used in these labs</p>
+    <table class="lib-table">
+      <thead>
+        <tr><th>Library</th><th>What it does</th><th>Install command</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="lib-badge" style="background:#e8f0f9;color:#0c447c;">requests</span></td>
+          <td>Makes HTTP calls to REST APIs. Used in the Translator lab to call the translation endpoint.</td>
+          <td><span class="inline-badge">pip install requests</span></td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#e0f4f1;color:#085041;">azure-ai-vision-face</span></td>
+          <td>Azure Face API client. Used in the Face Analysis lab. Wraps REST calls into Python objects.</td>
+          <td><span class="inline-badge">pip install azure-ai-vision-face</span></td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#eeebf8;color:#3c3489;">azure-ai-projects</span></td>
+          <td>Connects to a Foundry project and retrieves agents. Used in the Lab 1 agent client code.</td>
+          <td><span class="inline-badge">pip install azure-ai-projects</span></td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#fef3e2;color:#633806;">openai</span></td>
+          <td>OpenAI Python SDK. Used to call GPT-4o and other models via the Responses API.</td>
+          <td><span class="inline-badge">pip install openai</span></td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#fdecea;color:#791f1f;">azure-identity</span></td>
+          <td>Handles Microsoft Entra ID authentication (DefaultAzureCredential). Required for Foundry project auth.</td>
+          <td><span class="inline-badge">pip install azure-identity</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:13px;font-weight:600;color:var(--ink3);margin:20px 0 8px;">Broader AI / ML ecosystem — good to know for AI-901</p>
+    <table class="lib-table">
+      <thead>
+        <tr><th>Library</th><th>What it does</th><th>AI-901 relevance</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="lib-badge" style="background:#f5f5f5;color:#444441;">numpy</span></td>
+          <td>Fast numerical computing. Arrays and matrix math. The foundation every ML library builds on.</td>
+          <td>Underlying engine for ML model math</td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#f5f5f5;color:#444441;">pandas</span></td>
+          <td>Data manipulation. Load CSV/Excel files, filter rows, compute statistics. Essential for data prep.</td>
+          <td>Data preprocessing before model training</td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#f5f5f5;color:#444441;">scikit-learn</span></td>
+          <td>Classical ML models — linear regression, decision trees, random forest, SVM, clustering.</td>
+          <td>ML model types covered in exam</td>
+        </tr>
+        <tr>
+          <td><span class="lib-badge" style="background:#f5f5f5;color:#444441;">tensorflow / pytorch</span></td>
+          <td>Deep learning frameworks for building and training neural networks.</td>
+          <td>Deep learning concepts in exam</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="soft">
+
+    <!-- ══════════ SECTION 4: EXAMPLES ══════════ -->
+    <div class="sec-head"><span class="sec-num">04</span> AI Code Examples — Lab Patterns</div>
+
+    <p class="prose">The four examples below mirror the exact patterns used in the Translation and Face Analysis labs. Study each one to understand how Python connects to Azure AI services.</p>
+
+    <!-- Example 1 -->
+    <p style="font-size:13px;font-weight:600;color:var(--blue);margin:16px 0 4px;">Example 1 — Translation API call (Translator lab)</p>
+    <div class="callout callout-blue">This is the exact four-step pattern used in the Translation lab: <strong>import → credentials → call API → print result.</strong></div>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="kw">import</span> <span class="cls">requests</span>, <span class="cls">uuid</span>
+
+<span class="cm"># Step 1 — Credentials</span>
+<span class="nb">KEY</span>      = <span class="st">"your-key"</span>
+<span class="nb">REGION</span>   = <span class="st">"eastus"</span>
+<span class="nb">ENDPOINT</span> = <span class="st">"https://api.cognitive.microsofttranslator.com"</span>
+
+<span class="cm"># Step 2 — Build authentication headers</span>
+<span class="nb">headers</span> = {
+    <span class="st">"Ocp-Apim-Subscription-Key"</span>: <span class="nb">KEY</span>,
+    <span class="st">"Ocp-Apim-Subscription-Region"</span>: <span class="nb">REGION</span>,
+    <span class="st">"Content-type"</span>: <span class="st">"application/json"</span>,
+    <span class="st">"X-ClientTraceId"</span>: <span class="fn">str</span>(<span class="cls">uuid</span>.<span class="fn">uuid4</span>())
+}
+
+<span class="cm"># Step 3 — Call the API</span>
+<span class="nb">body</span>   = [{<span class="st">"text"</span>: <span class="st">"Hello, how are you?"</span>}]
+<span class="nb">params</span> = {<span class="st">"api-version"</span>: <span class="st">"3.0"</span>, <span class="st">"to"</span>: [<span class="st">"es"</span>, <span class="st">"fr"</span>]}
+<span class="nb">response</span> = <span class="cls">requests</span>.<span class="fn">post</span>(
+    <span class="st">f"</span><span class="pn">{ENDPOINT}</span><span class="st">/translate"</span>,
+    <span class="nb">params</span>=<span class="nb">params</span>, <span class="nb">headers</span>=<span class="nb">headers</span>, <span class="nb">json</span>=<span class="nb">body</span>
+)
+
+<span class="cm"># Step 4 — Parse JSON and print</span>
+<span class="nb">data</span> = <span class="nb">response</span>.<span class="fn">json</span>()
+<span class="kw">for</span> <span class="nb">t</span> <span class="kw">in</span> <span class="nb">data</span>[<span class="num">0</span>][<span class="st">"translations"</span>]:
+    <span class="fn">print</span>(<span class="st">f"[</span><span class="pn">{t['to']}</span><span class="st">]  </span><span class="pn">{t['text']}</span><span class="st">"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>[es]  Hola, ¿cómo estás?
+[fr]  Bonjour, comment allez-vous?</pre></div>
+    </div>
+
+    <!-- Example 2 -->
+    <p style="font-size:13px;font-weight:600;color:var(--blue);margin:20px 0 4px;">Example 2 — Language detection</p>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="nb">texts</span> = [<span class="st">"¿Dónde está la biblioteca?"</span>, <span class="st">"Je voudrais un café."</span>]
+
+<span class="nb">body</span>     = [{<span class="st">"text"</span>: <span class="nb">t</span>} <span class="kw">for</span> <span class="nb">t</span> <span class="kw">in</span> <span class="nb">texts</span>]   <span class="cm"># list comprehension</span>
+<span class="nb">response</span> = <span class="cls">requests</span>.<span class="fn">post</span>(
+    <span class="st">f"</span><span class="pn">{ENDPOINT}</span><span class="st">/detect"</span>,
+    <span class="nb">params</span>={<span class="st">"api-version"</span>: <span class="st">"3.0"</span>},
+    <span class="nb">headers</span>=<span class="nb">headers</span>, <span class="nb">json</span>=<span class="nb">body</span>
+)
+
+<span class="kw">for</span> <span class="nb">i</span>, <span class="nb">r</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="nb">response</span>.<span class="fn">json</span>()):
+    <span class="fn">print</span>(<span class="st">f"</span><span class="pn">{texts[i][:22]}</span><span class="st">... → </span><span class="pn">{r['language']}</span><span class="st"> (</span><span class="pn">{r['score']:.0%}</span><span class="st">)"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>¿Dónde está la bib... → es (100%)
+Je voudrais un ca... → fr (100%)</pre></div>
+    </div>
+
+    <!-- Example 3 -->
+    <p style="font-size:13px;font-weight:600;color:var(--blue);margin:20px 0 4px;">Example 3 — Parsing nested JSON (Face API lab)</p>
+    <div class="callout callout-amber"><strong>Nested dictionaries</strong> — API responses are often deeply nested. Use chained bracket access: <span class="inline-badge">result["faceAttributes"]["blur"]["blurLevel"]</span></div>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="cm"># Simulated Face API response</span>
+<span class="nb">face_response</span> = [{
+    <span class="st">"faceRectangle"</span>: {<span class="st">"top"</span>: <span class="num">45</span>, <span class="st">"left"</span>: <span class="num">194</span>},
+    <span class="st">"faceAttributes"</span>: {
+        <span class="st">"blur"</span>: {<span class="st">"blurLevel"</span>: <span class="st">"Low"</span>, <span class="st">"value"</span>: <span class="num">0.12</span>},
+        <span class="st">"qualityForRecognition"</span>: <span class="st">"High"</span>
+    }
+}]
+
+<span class="nb">face</span>    = <span class="nb">face_response</span>[<span class="num">0</span>]
+<span class="nb">quality</span> = <span class="nb">face</span>[<span class="st">"faceAttributes"</span>][<span class="st">"qualityForRecognition"</span>]
+<span class="nb">blur</span>    = <span class="nb">face</span>[<span class="st">"faceAttributes"</span>][<span class="st">"blur"</span>][<span class="st">"blurLevel"</span>]
+
+<span class="fn">print</span>(<span class="st">f"Quality: </span><span class="pn">{quality}</span><span class="st"> | Blur: </span><span class="pn">{blur}</span><span class="st">"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>Quality: High | Blur: Low</pre></div>
+    </div>
+
+    <!-- Example 4 -->
+    <p style="font-size:13px;font-weight:600;color:var(--blue);margin:20px 0 4px;">Example 4 — Loop + condition filtering (used in both labs)</p>
+    <div class="callout callout-green">This pattern — <strong>loop through results → check a condition → take action</strong> — appears in almost every Azure AI client script in these labs.</div>
+    <div class="code-wrap">
+      <div class="code-block"><pre><span class="nb">faces</span> = [
+    {<span class="st">"id"</span>: <span class="num">1</span>, <span class="st">"quality"</span>: <span class="st">"High"</span>,   <span class="st">"yaw"</span>: <span class="num">3.1</span>},
+    {<span class="st">"id"</span>: <span class="num">2</span>, <span class="st">"quality"</span>: <span class="st">"Low"</span>,    <span class="st">"yaw"</span>: <span class="num">45.2</span>},
+    {<span class="st">"id"</span>: <span class="num">3</span>, <span class="st">"quality"</span>: <span class="st">"High"</span>,   <span class="st">"yaw"</span>: <span class="num">8.5</span>},
+]
+
+<span class="kw">for</span> <span class="nb">face</span> <span class="kw">in</span> <span class="nb">faces</span>:
+    <span class="nb">q</span> = <span class="nb">face</span>[<span class="st">"quality"</span>]
+    <span class="nb">y</span> = <span class="nb">face</span>[<span class="st">"yaw"</span>]
+
+    <span class="kw">if</span> <span class="nb">q</span> == <span class="st">"High"</span> <span class="kw">and</span> <span class="nb">y</span> < <span class="num">15</span>:
+        <span class="fn">print</span>(<span class="st">f"Face </span><span class="pn">{face['id']}</span><span class="st">: Proceed to identification"</span>)
+    <span class="kw">elif</span> <span class="nb">q</span> == <span class="st">"Low"</span>:
+        <span class="fn">print</span>(<span class="st">f"Face </span><span class="pn">{face['id']}</span><span class="st">: Low quality — retry"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">f"Face </span><span class="pn">{face['id']}</span><span class="st">: Reposition — yaw=</span><span class="pn">{y}</span><span class="st">°"</span>)</pre></div>
+      <div class="output-block"><div class="out-label">output</div><pre>Face 1: Proceed to identification
+Face 2: Low quality — retry
+Face 3: Proceed to identification</pre></div>
+    </div>
+
+    <hr class="soft">
+
+    <!-- ══════════ SECTION 5: QUICK REFERENCE ══════════ -->
+    <div class="sec-head"><span class="sec-num">05</span> Quick Reference — Python vs. Other Languages</div>
+
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Concept</th><th>Python</th><th>JavaScript (for comparison)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Comment</td><td><span class="inline-badge"># this is a comment</span></td><td><span class="inline-badge">// this is a comment</span></td></tr>
+        <tr><td>Print to screen</td><td><span class="inline-badge">print("hello")</span></td><td><span class="inline-badge">console.log("hello")</span></td></tr>
+        <tr><td>String with variable</td><td><span class="inline-badge">f"Hello {name}"</span></td><td><span class="inline-badge">`Hello ${name}`</span></td></tr>
+        <tr><td>Define function</td><td><span class="inline-badge">def my_fn(x):</span></td><td><span class="inline-badge">function myFn(x) {</span></td></tr>
+        <tr><td>Indentation</td><td>Mandatory — 4 spaces</td><td>Optional (uses { } )</td></tr>
+        <tr><td>Install a package</td><td><span class="inline-badge">pip install requests</span></td><td><span class="inline-badge">npm install axios</span></td></tr>
+        <tr><td>Dictionary / Object</td><td><span class="inline-badge">{"key": "value"}</span></td><td><span class="inline-badge">{"key": "value"}</span></td></tr>
+        <tr><td>True / False</td><td><span class="inline-badge">True</span> / <span class="inline-badge">False</span> (capital)</td><td><span class="inline-badge">true</span> / <span class="inline-badge">false</span> (lowercase)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-purple">
+      <strong>Most important rule in Python:</strong> indentation is not optional — it defines code blocks. Four spaces (or one tab) inside a function, loop, or if statement is required. A missing indent will cause an <span class="inline-badge">IndentationError</span>.
+    </div>
+
+    <hr class="soft">
+
+    <!-- ══════════ SECTION 6: STEPS TO RUN ══════════ -->
+    <div class="sec-head"><span class="sec-num">06</span> How to Run Python in These Labs</div>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Open VS Code for the Web</strong> — navigate to <span class="inline-badge">https://vscode.dev</span> in any browser. No installation required.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Open the terminal</strong> — press <span class="inline-badge">Ctrl + `</span> (backtick) or go to Terminal → New Terminal.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Install a library</strong> — type <span class="inline-badge">pip install requests</span> (or the specific package name) and press Enter.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Create a .py file</strong> — click New File, name it <span class="inline-badge">my_script.py</span>, and paste the lab code.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Replace credentials</strong> — swap <span class="inline-badge">"your-key"</span> and <span class="inline-badge">"your-endpoint"</span> with your actual Azure resource values.</div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Run the script</strong> — type <span class="inline-badge">python my_script.py</span> in the terminal and press Enter. Output appears below.</div></div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>Lab 1 connection:</strong> In Lab 1 you already ran <span class="inline-badge">run_agent.py</span> using VS Code for the Web in Azure Cloud Shell. Every Python lab script in this notebook follows the exact same steps above.
+    </div>
+
+  </div><!-- end page-content -->
+  </div><!-- end page-body -->
+
+  <!-- ── FOOTER ── -->
+  <div class="page-footer">
+    <span>Virtual Azure AI-901 PD Notebook &nbsp;·&nbsp; NLP Module &nbsp;·&nbsp; Python Prerequisite</span>
+    <span>Azure AI-901 Certification Prep</span>
+  </div>
+
+</div><!-- end page -->
+
+<button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+
+</body>
+</html>

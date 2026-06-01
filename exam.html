@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI-901 Practice Exam — 100 Questions</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<title>AI-901 Practice Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,68 +15,146 @@
   --amber:#8B5E00;--amber-l:#FEF3DC;
   --red:#A32D2D;--red-l:#FDECEA;
   --gray:#595959;--gray-l:#F5F5F5;
-  --ink:#1A1A1A;--border:#D9D9D9;--paper:#FAFAFA;
+  --ink:#1A1A1A;--border:#D9D9D9;
 }
 body{font-family:'DM Sans',sans-serif;background:#EEF2F8;min-height:100vh;color:var(--ink)}
 
-/* HEADER */
-.hd{background:linear-gradient(135deg,var(--blue) 0%,#0d3d6b 100%);color:#fff;padding:1.75rem 2.5rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem}
-.hd-title{font-size:24px;font-weight:600;margin-bottom:4px}
-.hd-sub{font-size:13px;opacity:.8;line-height:1.5}
-.score-box{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:10px 18px;text-align:center;min-width:120px}
-.score-num{font-size:28px;font-weight:600;line-height:1}
-.score-lbl{font-size:11px;opacity:.7;margin-top:2px}
+/* ── NAV ── */
+.top-nav{background:#0d3d6b;padding:10px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:200}
+.top-nav a{color:#93c5fd;text-decoration:none;font-size:13px;font-weight:600}
+.top-nav span{color:rgba(255,255,255,.3);font-size:13px}
+.top-nav .nav-user{margin-left:auto;color:rgba(255,255,255,.7);font-size:12.5px;display:flex;align-items:center;gap:6px}
+.nav-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:500;color:white}
 
-/* PROGRESS */
-.prog-bar-wrap{background:#fff;padding:.85rem 2.5rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.prog-info{display:flex;justify-content:space-between;font-size:12.5px;color:var(--gray);margin-bottom:5px}
+/* ── MODAL (name entry) ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.92);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;padding:1rem;
+}
+.modal-overlay.hidden{display:none}
+.modal-card{
+  background:white;border-radius:16px;padding:2.5rem;
+  max-width:440px;width:100%;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.35);
+}
+.modal-logo{font-size:44px;margin-bottom:1rem}
+.modal-title{font-size:22px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.modal-sub{font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:1.75rem}
+.modal-label{font-size:13px;font-weight:600;color:var(--ink);text-align:left;margin-bottom:6px;display:block}
+.modal-input{
+  width:100%;padding:12px 16px;border:2px solid var(--border);
+  border-radius:8px;font-size:16px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border .15s;
+}
+.modal-input:focus{border-color:var(--blue)}
+.modal-pills{display:flex;flex-wrap:wrap;gap:6px;margin:1rem 0;justify-content:center}
+.modal-pill{
+  font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;
+}
+.modal-btn{
+  width:100%;margin-top:1.25rem;padding:13px;border:none;border-radius:8px;
+  background:var(--blue);color:white;font-size:15px;font-weight:600;
+  font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .15s;
+}
+.modal-btn:hover{background:#154d8a}
+.modal-btn:disabled{background:var(--border);color:var(--gray);cursor:default}
+.modal-note{font-size:11.5px;color:var(--gray);margin-top:.75rem;line-height:1.5}
+
+/* ── HEADER ── */
+.exam-header{
+  background:linear-gradient(135deg,#0d3d6b 0%,#1F5FA6 100%);
+  color:white;padding:1.25rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+}
+.hd-left{}
+.hd-title{font-size:18px;font-weight:600}
+.hd-sub{font-size:12.5px;opacity:.7;margin-top:2px}
+.score-box{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:8px 16px;text-align:center;min-width:100px}
+.score-num{font-size:24px;font-weight:600;line-height:1}
+.score-lbl{font-size:11px;opacity:.65;margin-top:1px}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:white;padding:.75rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.prog-info{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:5px}
 .prog-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .prog-fill{height:100%;background:var(--blue);border-radius:3px;transition:width .4s}
 
-/* DISTRIBUTION BAR */
-.dist-bar{background:#fff;padding:.65rem 2.5rem;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.dist-lbl{font-size:11px;color:var(--gray);margin-right:4px;font-weight:500}
-.dist-seg{height:8px;border-radius:4px;display:inline-block}
+/* ── DIST BAR ── */
+.dist{background:white;padding:.55rem 2rem;border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dist-lbl{font-size:11px;color:var(--gray);font-weight:500}
+.dist-pill{font-size:10.5px;padding:2px 8px;border-radius:10px;font-weight:600}
 
-/* FILTERS */
-.filters{background:#fff;padding:.65rem 2.5rem;border-bottom:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap}
-.fbtn{font-size:11.5px;font-weight:500;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .12s;color:var(--gray)}
-.fbtn:hover{border-color:var(--blue);color:var(--blue)}
-.fbtn.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+/* ── FILTERS ── */
+.filters{background:white;padding:.6rem 2rem;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{font-size:11.5px;font-weight:500;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;cursor:pointer;transition:all .12s;color:var(--gray)}
+.fbtn:hover,.fbtn.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
 .fbtn.cat-RAI.on{border-color:var(--purple);background:var(--purple-l);color:var(--purple)}
-.fbtn.cat-GEN.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
 .fbtn.cat-NLP.on{border-color:var(--teal);background:var(--teal-l);color:var(--teal)}
 .fbtn.cat-CV.on{border-color:var(--amber);background:var(--amber-l);color:var(--amber)}
 .fbtn.cat-IE.on{border-color:var(--red);background:var(--red-l);color:var(--red)}
 .fbtn.cat-ML.on{border-color:var(--green);background:var(--green-l);color:var(--green)}
 
-/* BODY */
-.body{max-width:860px;margin:0 auto;padding:1.75rem 1.5rem 6rem}
+/* ── BODY ── */
+.body{max-width:860px;margin:0 auto;padding:1.5rem 1.25rem 6rem}
 
-/* RESULT CARD */
-.result{background:#fff;border:1px solid var(--border);border-radius:10px;padding:2rem;text-align:center;margin-bottom:1.5rem;display:none}
-.result.show{display:block}
-.result-pct{font-size:52px;font-weight:600}
-.result-msg{font-size:15px;color:var(--gray);margin-top:6px}
-.result-breakdown{display:flex;justify-content:center;gap:24px;margin-top:1.25rem;flex-wrap:wrap}
-.rb-item{text-align:center}
-.rb-val{font-size:22px;font-weight:600}
-.rb-lbl{font-size:11px;color:var(--gray);margin-top:2px}
+/* ── RESULT CARD ── */
+.result-card{
+  background:white;border:1px solid var(--border);border-radius:14px;
+  padding:2rem;margin-bottom:1.5rem;display:none;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+}
+.result-card.show{display:block}
 
-/* QUESTION CARD */
-.qcard{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:1rem;overflow:hidden;transition:box-shadow .15s}
+/* Screenshot card */
+.screenshot-card{
+  background:linear-gradient(135deg,#0d3d6b 0%,#1F5FA6 60%,#0E6B60 100%);
+  border-radius:12px;padding:2rem;margin-bottom:1.25rem;color:white;
+  position:relative;overflow:hidden;
+}
+.screenshot-card::before{
+  content:'AI-901 PD';position:absolute;right:-20px;top:-20px;
+  font-size:80px;font-weight:700;opacity:.06;white-space:nowrap;
+}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
+.sc-name{font-size:22px;font-weight:700;margin-bottom:3px}
+.sc-date{font-size:12px;opacity:.65}
+.sc-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:8px 16px;text-align:center}
+.sc-pct{font-size:36px;font-weight:700;line-height:1}
+.sc-pct-lbl{font-size:11px;opacity:.65;margin-top:2px}
+.sc-totals{display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.sc-total{}
+.sc-tv{font-size:26px;font-weight:700}
+.sc-tl{font-size:11px;opacity:.6;margin-top:2px}
+.sc-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.sc-cat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 14px;}
+.sc-cat-name{font-size:11.5px;font-weight:600;opacity:.8;margin-bottom:6px}
+.sc-cat-bar{height:6px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.sc-cat-fill{height:100%;border-radius:3px;background:rgba(255,255,255,.8);transition:width .6s}
+.sc-cat-nums{display:flex;justify-content:space-between;font-size:11px;opacity:.7}
+.sc-msg{text-align:center;margin-top:1.25rem;padding:10px;background:rgba(255,255,255,.1);border-radius:8px;font-size:13.5px;font-weight:500}
+.sc-footer{text-align:center;font-size:11px;opacity:.5;margin-top:1rem}
+
+/* result actions */
+.result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem}
+.r-btn{padding:9px 22px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;text-decoration:none;display:inline-block}
+.r-btn-primary{background:var(--blue);color:white}
+.r-btn-primary:hover{background:#154d8a}
+.r-btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+.r-btn-outline:hover{background:var(--blue-l)}
+
+/* ── QUESTION CARD ── */
+.qcard{background:white;border:1px solid var(--border);border-radius:10px;margin-bottom:1rem;overflow:hidden;transition:box-shadow .15s}
 .qcard:hover{box-shadow:0 2px 14px rgba(0,0,0,.07)}
 .qcard.hidden{display:none}
-
-.qhdr{display:flex;align-items:center;gap:10px;padding:12px 16px 10px;border-bottom:1px solid var(--border)}
-.qnum{min-width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.qhdr{display:flex;align-items:center;gap:10px;padding:11px 16px 9px;border-bottom:1px solid var(--border)}
+.qnum{min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:white;flex-shrink:0}
 .qnum.cat-RAI{background:var(--purple)}
 .qnum.cat-GEN{background:var(--blue)}
 .qnum.cat-NLP{background:var(--teal)}
 .qnum.cat-CV{background:var(--amber)}
 .qnum.cat-IE{background:var(--red)}
 .qnum.cat-ML{background:var(--green)}
-
 .cat-badge{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:.03em}
 .cat-RAI{background:var(--purple-l);color:var(--purple)}
 .cat-GEN{background:var(--blue-l);color:var(--blue)}
@@ -84,59 +162,90 @@ body{font-family:'DM Sans',sans-serif;background:#EEF2F8;min-height:100vh;color:
 .cat-CV{background:var(--amber-l);color:var(--amber)}
 .cat-IE{background:var(--red-l);color:var(--red)}
 .cat-ML{background:var(--green-l);color:var(--green)}
-.qstatus{margin-left:auto;font-size:18px;line-height:1}
-
-.qbody{padding:14px 16px}
-.qtext{font-size:14.5px;line-height:1.75;margin-bottom:12px;color:var(--ink)}
-.opts{display:flex;flex-direction:column;gap:7px}
-
-.opt{display:flex;align-items:flex-start;gap:10px;padding:9px 13px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:13.5px;line-height:1.55;color:var(--ink);transition:all .1s;user-select:none}
+.qstatus{margin-left:auto;font-size:18px}
+.qbody{padding:13px 16px}
+.qtext{font-size:14.5px;line-height:1.75;margin-bottom:11px;color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:13.5px;line-height:1.55;color:var(--ink);transition:all .1s;user-select:none}
 .opt:hover:not(.locked){border-color:var(--blue);background:var(--blue-l)}
-.opt.chosen{border-color:var(--blue);background:var(--blue-l)}
 .opt.correct{border-color:var(--green)!important;background:var(--green-l)!important}
 .opt.wrong{border-color:var(--red)!important;background:var(--red-l)!important}
 .opt.locked{cursor:default}
 .opt-lt{min-width:22px;height:22px;border-radius:50%;background:var(--gray-l);color:var(--gray);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px;transition:all .1s}
-.opt.chosen .opt-lt{background:var(--blue);color:#fff}
-.opt.correct .opt-lt{background:var(--green);color:#fff}
-.opt.wrong .opt-lt{background:var(--red);color:#fff}
-
-/* FEEDBACK + EXPLANATION */
-.feedback{margin-top:10px;border-radius:6px;overflow:hidden;display:none}
+.opt.correct .opt-lt{background:var(--green);color:white}
+.opt.wrong .opt-lt{background:var(--red);color:white}
+.feedback{margin-top:9px;border-radius:6px;overflow:hidden;display:none}
 .feedback.show{display:block}
-.fb-verdict{padding:9px 14px;font-size:13px;font-weight:500}
+.fb-verdict{padding:8px 13px;font-size:13px;font-weight:500}
 .fb-correct{background:var(--green-l);color:#0a3d1f;border-left:4px solid var(--green)}
 .fb-wrong{background:var(--red-l);color:#6b1515;border-left:4px solid var(--red)}
-.fb-exp{padding:10px 14px;background:#F8F8F8;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
-.fb-exp-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:5px}
-.fb-exp-text{font-size:13px;line-height:1.7;color:var(--ink)}
+.fb-exp{padding:9px 13px;background:#F8F8F8;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
+.fb-exp-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin-bottom:4px}
+.fb-exp-text{font-size:13px;line-height:1.65;color:var(--ink)}
 
-/* FOOTER BAR */
-.footer-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:.7rem 2.5rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 10px rgba(0,0,0,.06);z-index:100}
+/* ── FOOTER ── */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 10px rgba(0,0,0,.06);z-index:100}
 .fstat{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--gray)}
 .fdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.reset-btn{margin-left:auto;padding:6px 18px;border:none;border-radius:6px;background:var(--blue);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
+.reset-btn{margin-left:auto;padding:6px 16px;border:none;border-radius:6px;background:var(--blue);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
 .reset-btn:hover{background:#154d8a}
 
+/* screenshot hint */
+.screenshot-hint{
+  background:linear-gradient(135deg,rgba(26,122,74,.1),rgba(14,107,96,.1));
+  border:1px solid rgba(26,122,74,.25);border-radius:8px;
+  padding:10px 16px;font-size:13px;color:#0d4a2a;
+  display:flex;align-items:center;gap:8px;margin-bottom:1rem;
+}
+
+@media print{
+  .top-nav,.prog-wrap,.dist,.filters,.footer-bar,.result-actions,.screenshot-hint{display:none!important}
+  .screenshot-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 @media(max-width:600px){
-  .hd,.filters,.dist-bar,.prog-bar-wrap,.footer-bar{padding-left:1rem;padding-right:1rem}
+  .exam-header,.filters,.dist,.footer-bar{padding-left:1rem;padding-right:1rem}
   .body{padding:1rem .75rem 6rem}
 }
 </style>
 </head>
 <body>
-<div style="background:#0d3d6b;padding:10px 24px;display:flex;align-items:center;gap:14px;font-family:'DM Sans',sans-serif;position:sticky;top:0;z-index:9999;">
-  <a href="index.html" style="color:#93c5fd;text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">← Back to AI-901 PD Portal</a>
-  <span style="color:rgba(255,255,255,.3);font-size:13px">|</span>
-  <span style="color:rgba(255,255,255,.45);font-size:12px">Virtual Azure AI-901 PD</span>
+
+<!-- NAME MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-card">
+    <div class="modal-logo">☁️</div>
+    <div class="modal-title">AI-901 Practice Exam</div>
+    <div class="modal-sub">Enter your name to start. Your results will be saved automatically so you can take a screenshot at the end.</div>
+    <label class="modal-label" for="nameInput">Your full name</label>
+    <input class="modal-input" id="nameInput" type="text" placeholder="e.g. Juan Carlos Tovar" maxlength="60" autocomplete="name">
+    <div class="modal-pills">
+      <span class="modal-pill" style="background:var(--purple-l);color:var(--purple)">Responsible AI 15%</span>
+      <span class="modal-pill" style="background:var(--blue-l);color:var(--blue)">Generative AI 35%</span>
+      <span class="modal-pill" style="background:var(--teal-l);color:var(--teal)">NLP 20%</span>
+      <span class="modal-pill" style="background:var(--amber-l);color:var(--amber)">Vision 20%</span>
+      <span class="modal-pill" style="background:var(--gray-l);color:var(--gray)">IE 5% · ML 5%</span>
+    </div>
+    <button class="modal-btn" id="startBtn" onclick="startExam()" disabled>🚀 Start Exam</button>
+    <div class="modal-note">100 questions · Instant feedback + explanations · No login required</div>
+  </div>
 </div>
 
+<!-- NAV -->
+<div class="top-nav">
+  <a href="index.html">← Portal</a>
+  <span>|</span>
+  <span style="color:rgba(255,255,255,.55);font-size:12px">AI-901 Practice Exam</span>
+  <div class="nav-user">
+    <span style="color:rgba(255,255,255,.4);font-size:12px">👤</span>
+    <span class="nav-badge" id="nav-name">—</span>
+  </div>
+</div>
 
 <!-- HEADER -->
-<div class="hd">
-  <div>
-    <div class="hd-title">AI-901 Practice Exam</div>
-    <div class="hd-sub">100 Questions &nbsp;·&nbsp; All AI-901 skill areas &nbsp;·&nbsp; Includes explanations after each answer</div>
+<div class="exam-header">
+  <div class="hd-left">
+    <div class="hd-title">AI-901 Practice Exam — 100 Questions</div>
+    <div class="hd-sub">Covers all AI-901 skill areas · Click an option to answer · Explanations shown after each answer</div>
   </div>
   <div class="score-box">
     <div class="score-num" id="hdr-score">0/100</div>
@@ -145,7 +254,7 @@ body{font-family:'DM Sans',sans-serif;background:#EEF2F8;min-height:100vh;color:
 </div>
 
 <!-- PROGRESS -->
-<div class="prog-bar-wrap">
+<div class="prog-wrap">
   <div class="prog-info">
     <span id="prog-txt">0 of 100 answered</span>
     <span id="prog-pct">0% correct</span>
@@ -153,15 +262,15 @@ body{font-family:'DM Sans',sans-serif;background:#EEF2F8;min-height:100vh;color:
   <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
 </div>
 
-<!-- DISTRIBUTION INFO -->
-<div class="dist-bar">
-  <span class="dist-lbl">Exam distribution:</span>
-  <span style="font-size:11px;color:var(--purple);font-weight:500">Responsible AI 15%</span>
-  <span style="font-size:11px;color:var(--blue);font-weight:500">· Generative AI & Foundry 35%</span>
-  <span style="font-size:11px;color:var(--teal);font-weight:500">· Text/Language/Speech 20%</span>
-  <span style="font-size:11px;color:var(--amber);font-weight:500">· Computer Vision 20%</span>
-  <span style="font-size:11px;color:var(--red);font-weight:500">· Info Extraction 5%</span>
-  <span style="font-size:11px;color:var(--green);font-weight:500">· ML Concepts 5%</span>
+<!-- DIST -->
+<div class="dist">
+  <span class="dist-lbl">Distribution:</span>
+  <span class="dist-pill" style="background:var(--purple-l);color:var(--purple)">RAI 15</span>
+  <span class="dist-pill" style="background:var(--blue-l);color:var(--blue)">GenAI 35</span>
+  <span class="dist-pill" style="background:var(--teal-l);color:var(--teal)">NLP 20</span>
+  <span class="dist-pill" style="background:var(--amber-l);color:var(--amber)">Vision 20</span>
+  <span class="dist-pill" style="background:var(--red-l);color:var(--red)">IE 5</span>
+  <span class="dist-pill" style="background:var(--green-l);color:var(--green)">ML 5</span>
 </div>
 
 <!-- FILTERS -->
@@ -177,15 +286,58 @@ body{font-family:'DM Sans',sans-serif;background:#EEF2F8;min-height:100vh;color:
 
 <!-- BODY -->
 <div class="body">
-  <div class="result" id="result-card">
-    <div class="result-pct" id="res-pct"></div>
-    <div class="result-msg" id="res-msg"></div>
-    <div class="result-breakdown">
-      <div class="rb-item"><div class="rb-val" id="rb-correct" style="color:var(--green)">0</div><div class="rb-lbl">Correct</div></div>
-      <div class="rb-item"><div class="rb-val" id="rb-wrong" style="color:var(--red)">0</div><div class="rb-lbl">Incorrect</div></div>
-      <div class="rb-item"><div class="rb-val" id="rb-pct" style="color:var(--blue)">0%</div><div class="rb-lbl">Score</div></div>
+  <div class="result-card" id="result-card">
+
+    <div class="screenshot-hint">
+      📸 <strong>Take a screenshot</strong> of your results card below to save your score!
+      &nbsp;·&nbsp; Windows: <strong>Win+Shift+S</strong> &nbsp;·&nbsp; Mac: <strong>Cmd+Shift+4</strong>
     </div>
+
+    <!-- SCREENSHOT CARD -->
+    <div class="screenshot-card" id="screenshot-card">
+      <div class="sc-top">
+        <div>
+          <div class="sc-name" id="sc-name">—</div>
+          <div class="sc-date" id="sc-date">—</div>
+          <div style="font-size:12px;opacity:.55;margin-top:4px">Virtual Azure AI-901 PD · Microsoft Foundry</div>
+        </div>
+        <div class="sc-badge">
+          <div class="sc-pct" id="sc-pct">—</div>
+          <div class="sc-pct-lbl">Final Score</div>
+        </div>
+      </div>
+
+      <div class="sc-totals">
+        <div class="sc-total">
+          <div class="sc-tv" id="sc-correct" style="color:#7dd3b8">—</div>
+          <div class="sc-tl">Correct</div>
+        </div>
+        <div class="sc-total">
+          <div class="sc-tv" id="sc-wrong" style="color:#fca5a5">—</div>
+          <div class="sc-tl">Incorrect</div>
+        </div>
+        <div class="sc-total">
+          <div class="sc-tv">100</div>
+          <div class="sc-tl">Total Questions</div>
+        </div>
+      </div>
+
+      <!-- Per-category breakdown -->
+      <div class="sc-cats" id="sc-cats"></div>
+
+      <div class="sc-msg" id="sc-msg">Complete all 100 questions to see your result!</div>
+      <div class="sc-footer">AI-901 Certification Prep · juancarlos76.github.io/AI-901-PD-Portal</div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="result-actions">
+      <button class="r-btn r-btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
+      <button class="r-btn r-btn-outline" onclick="resetExam()">↺ Retake Exam</button>
+      <a href="index.html" class="r-btn r-btn-outline">← Back to Portal</a>
+    </div>
+
   </div>
+
   <div id="qlist"></div>
 </div>
 
@@ -306,37 +458,76 @@ const CAT_NAMES = {
   NLP:'Text, Language & Speech', CV:'Computer Vision',
   IE:'Information Extraction', ML:'AI & ML Concepts'
 };
+const CAT_COLORS = {
+  RAI:'#5A3FA0', GEN:'#1F5FA6', NLP:'#0E6B60',
+  CV:'#8B5E00', IE:'#A32D2D', ML:'#1A7A4A'
+};
+const CAT_LIGHT = {
+  RAI:'#EEEAF8', GEN:'#E8F0F9', NLP:'#E0F4F1',
+  CV:'#FEF3DC', IE:'#FDECEA', ML:'#E2F4EB'
+};
 
 let STATE = {};
+let USER_NAME = '';
 let curFilter = 'ALL';
+const STORAGE_KEY = 'ai901_exam_state';
 
-function buildExam() {
+// ── MODAL ──────────────────────────────────────────
+document.getElementById('nameInput').addEventListener('input', function(){
+  document.getElementById('startBtn').disabled = this.value.trim().length < 2;
+});
+document.getElementById('nameInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && this.value.trim().length >= 2) startExam();
+});
+
+function startExam(){
+  const name = document.getElementById('nameInput').value.trim();
+  if(name.length < 2) return;
+  USER_NAME = name;
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('nav-name').textContent = name;
+
+  // Load saved state if exists
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    try{
+      const data = JSON.parse(saved);
+      if(data.name === name && data.state){
+        STATE = data.state;
+        buildExam();
+        restoreAnswers();
+        return;
+      }
+    } catch(e){}
+  }
+  buildExam();
+}
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    name: USER_NAME, state: STATE, ts: Date.now()
+  }));
+}
+
+// ── BUILD ──────────────────────────────────────────
+function buildExam(){
   const list = document.getElementById('qlist');
   list.innerHTML = '';
   const letters = ['A','B','C','D','E','F'];
-
   QS.forEach(q => {
     const card = document.createElement('div');
     card.className = 'qcard';
-    card.id = 'card-' + q.num;
+    card.id = 'card-'+q.num;
     card.dataset.cat = q.cat;
-
     let optsHtml = '';
-    q.opts.forEach((opt, i) => {
+    q.opts.forEach((opt,i) => {
       const lt = letters[i];
       optsHtml += `<div class="opt" id="opt-${q.num}-${lt}" onclick="pick(${q.num},'${lt}')">
-        <div class="opt-lt">${lt}</div>
-        <div>${opt.replace(/^[A-F]\. /, '')}</div>
+        <div class="opt-lt">${lt}</div><div>${opt.replace(/^[A-F]\. /,'')}</div>
       </div>`;
     });
-
     const expHtml = q.exp
-      ? `<div class="fb-exp"><div class="fb-exp-lbl">📖 Explanation</div><div class="fb-exp-text">${q.exp}</div></div>`
-      : '';
-
-    const multiNote = q.ans.length > 1
-      ? `<div style="font-size:11.5px;color:var(--gray);margin-bottom:8px;font-style:italic">Select all correct answers (multiple correct)</div>` : '';
-
+      ? `<div class="fb-exp"><div class="fb-exp-lbl">📖 Explanation</div><div class="fb-exp-text">${q.exp}</div></div>` : '';
     card.innerHTML = `
       <div class="qhdr">
         <div class="qnum cat-${q.cat}">${q.num}</div>
@@ -345,7 +536,6 @@ function buildExam() {
       </div>
       <div class="qbody">
         <div class="qtext">${q.q}</div>
-        ${multiNote}
         <div class="opts">${optsHtml}</div>
         <div class="feedback" id="fb-${q.num}">
           <div class="fb-verdict" id="fv-${q.num}"></div>
@@ -358,32 +548,60 @@ function buildExam() {
   updateStats();
 }
 
-function pick(num, letter) {
-  if (STATE[num]) return;
+function restoreAnswers(){
+  Object.entries(STATE).forEach(([num,s]) => {
+    const q = QS.find(x => x.num === parseInt(num));
+    if(!q) return;
+    const letters = ['A','B','C','D','E','F'];
+    q.opts.forEach((_,i) => {
+      const lt = letters[i];
+      const el = document.getElementById(`opt-${num}-${lt}`);
+      if(!el) return;
+      el.classList.add('locked');
+      if(q.ans.includes(lt)) el.classList.add('correct');
+      else if(lt === s.chosen && !q.ans.includes(lt)) el.classList.add('wrong');
+    });
+    const fv = document.getElementById(`fv-${num}`);
+    const fb = document.getElementById(`fb-${num}`);
+    const st = document.getElementById(`st-${num}`);
+    if(s.correct){
+      fv.textContent = '✓ Correct! Answer: '+q.ans.split('').join(', ');
+      fv.className = 'fb-verdict fb-correct';
+      st.textContent = '✅';
+    } else {
+      fv.textContent = '✗ Incorrect. Correct answer: '+q.ans.split('').join(', ');
+      fv.className = 'fb-verdict fb-wrong';
+      st.textContent = '❌';
+    }
+    fb.classList.add('show');
+  });
+  updateStats();
+}
+
+function pick(num, letter){
+  if(STATE[num]) return;
   const q = QS.find(x => x.num === num);
   const isCorrect = q.ans.includes(letter);
-  STATE[num] = { chosen: letter, correct: isCorrect, ans: q.ans };
-
+  STATE[num] = { chosen:letter, correct:isCorrect, ans:q.ans };
+  saveState();
   const letters = ['A','B','C','D','E','F'];
-  q.opts.forEach((_, i) => {
+  q.opts.forEach((_,i) => {
     const lt = letters[i];
     const el = document.getElementById(`opt-${num}-${lt}`);
-    if (!el) return;
+    if(!el) return;
     el.classList.add('locked');
-    if (q.ans.includes(lt)) el.classList.add('correct');
-    else if (lt === letter) el.classList.add('wrong');
+    if(q.ans.includes(lt)) el.classList.add('correct');
+    else if(lt === letter && !q.ans.includes(lt)) el.classList.add('wrong');
   });
-
   const fv = document.getElementById(`fv-${num}`);
   const fb = document.getElementById(`fb-${num}`);
   const st = document.getElementById(`st-${num}`);
-
-  if (isCorrect) {
-    fv.textContent = '✓ Correct! Answer: ' + q.ans.split('').join(', ');
+  if(isCorrect){
+    fv.textContent = '✓ Correct! Answer: '+q.ans.split('').join(', ');
     fv.className = 'fb-verdict fb-correct';
     st.textContent = '✅';
   } else {
-    fv.textContent = '✗ Incorrect. Correct answer: ' + q.ans.split('').join(', ');
+    fv.textContent = '✗ Incorrect. Correct answer: '+q.ans.split('').join(', ');
     fv.className = 'fb-verdict fb-wrong';
     st.textContent = '❌';
   }
@@ -391,60 +609,90 @@ function pick(num, letter) {
   updateStats();
 }
 
-function updateStats() {
+function updateStats(){
   const total = 100;
   const answered = Object.keys(STATE).length;
-  const correct  = Object.values(STATE).filter(s => s.correct).length;
+  const correct  = Object.values(STATE).filter(s=>s.correct).length;
   const wrong    = answered - correct;
-  const pct      = answered > 0 ? Math.round(correct / answered * 100) : 0;
+  const pct      = answered > 0 ? Math.round(correct/answered*100) : 0;
+  document.getElementById('prog-txt').textContent  = `${answered} of ${total} answered`;
+  document.getElementById('prog-pct').textContent  = answered > 0 ? `${pct}% correct` : '0%';
+  document.getElementById('prog-fill').style.width = (answered/total*100)+'%';
+  document.getElementById('hdr-score').textContent = `${answered}/${total}`;
+  document.getElementById('fs-correct').textContent= `${correct} correct`;
+  document.getElementById('fs-wrong').textContent  = `${wrong} wrong`;
+  document.getElementById('fs-left').textContent   = `${total-answered} remaining`;
 
-  document.getElementById('prog-txt').textContent   = `${answered} of ${total} answered`;
-  document.getElementById('prog-pct').textContent   = answered > 0 ? `${pct}% correct` : '0%';
-  document.getElementById('prog-fill').style.width  = (answered / total * 100) + '%';
-  document.getElementById('hdr-score').textContent  = `${answered}/${total}`;
-  document.getElementById('fs-correct').textContent = `${correct} correct`;
-  document.getElementById('fs-wrong').textContent   = `${wrong} wrong`;
-  document.getElementById('fs-left').textContent    = `${total - answered} remaining`;
-
-  if (answered === total) {
-    const rc  = document.getElementById('result-card');
-    const msg = pct >= 80 ? '🎉 Excellent! You are ready for the AI-901 exam.' :
-                pct >= 70 ? '👍 Good work! Review weak areas before exam day.' :
-                pct >= 60 ? '📚 Keep studying — review incorrect answers carefully.' :
-                            '💪 Keep practicing — re-read the study guide and retry.';
-    document.getElementById('res-pct').textContent = pct + '%';
-    document.getElementById('res-pct').style.color = pct >= 70 ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--red)';
-    document.getElementById('res-msg').textContent  = msg;
-    document.getElementById('rb-correct').textContent = correct;
-    document.getElementById('rb-wrong').textContent   = wrong;
-    document.getElementById('rb-pct').textContent     = pct + '%';
-    rc.classList.add('show');
-    rc.scrollIntoView({behavior:'smooth',block:'start'});
-  }
+  if(answered === total) showResults(correct, wrong, pct);
 }
 
-function setFilter(cat, btn) {
+function showResults(correct, wrong, pct){
+  const rc = document.getElementById('result-card');
+  rc.classList.add('show');
+
+  // Header
+  document.getElementById('sc-name').textContent = USER_NAME || 'Participant';
+  document.getElementById('sc-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('sc-pct').textContent  = pct+'%';
+  document.getElementById('sc-pct').style.color  = pct>=80?'#7dd3b8':pct>=70?'#fde68a':'#fca5a5';
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-wrong').textContent   = wrong;
+
+  // Per-category breakdown
+  const cats = ['RAI','GEN','NLP','CV','IE','ML'];
+  const catResults = {};
+  cats.forEach(c => catResults[c] = {total:0, correct:0});
+  QS.forEach(q => {
+    catResults[q.cat].total++;
+    if(STATE[q.num]?.correct) catResults[q.cat].correct++;
+  });
+  const catsHtml = cats.map(c => {
+    const r = catResults[c];
+    const catPct = r.total > 0 ? Math.round(r.correct/r.total*100) : 0;
+    const answered = Object.keys(STATE).filter(n => QS.find(q=>q.num===parseInt(n)&&q.cat===c)).length;
+    return `<div class="sc-cat">
+      <div class="sc-cat-name">${CAT_NAMES[c]}</div>
+      <div class="sc-cat-bar"><div class="sc-cat-fill" style="width:${catPct}%"></div></div>
+      <div class="sc-cat-nums"><span>${r.correct}/${r.total} correct</span><span style="font-weight:600">${catPct}%</span></div>
+    </div>`;
+  }).join('');
+  document.getElementById('sc-cats').innerHTML = catsHtml;
+
+  // Message
+  const msg = pct>=80?'🎉 Excellent! You are ready for the AI-901 exam.':
+              pct>=70?'👍 Good work! Review weak areas before exam day.':
+              pct>=60?'📚 Keep studying — review your incorrect answers.':
+                      '💪 Keep practicing — use the study guide and retry.';
+  document.getElementById('sc-msg').textContent = msg;
+
+  rc.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function setFilter(cat, btn){
   curFilter = cat;
-  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   applyFilter();
 }
-
-function applyFilter() {
-  document.querySelectorAll('.qcard').forEach(card => {
-    card.classList.toggle('hidden', curFilter !== 'ALL' && card.dataset.cat !== curFilter);
+function applyFilter(){
+  document.querySelectorAll('.qcard').forEach(card=>{
+    card.classList.toggle('hidden', curFilter!=='ALL' && card.dataset.cat!==curFilter);
   });
 }
-
-function resetExam() {
-  if (!confirm('Reset all answers and start over?')) return;
+function resetExam(){
+  if(!confirm('Reset all answers and start over?')) return;
   STATE = {};
-  buildExam();
+  localStorage.removeItem(STORAGE_KEY);
   document.getElementById('result-card').classList.remove('show');
+  document.getElementById('nameInput').value = '';
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('nav-name').textContent = '—';
+  buildExam();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-buildExam();
+// Don't build until name is entered
 </script>
 </body>
 </html>
